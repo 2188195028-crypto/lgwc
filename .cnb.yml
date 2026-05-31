@@ -1,0 +1,5 @@
+# CNB CloudApp / Pages 自动部署配置
+# 理工文创 - 静态商品页
+site:
+  branch: main
+  directory: /
