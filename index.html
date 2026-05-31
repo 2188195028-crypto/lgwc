@@ -1,0 +1,2698 @@
+<!--
+  ESSENCE · 纯白之息 — 极简香水品牌商品页
+  设计主题：Apple 风 — 高级、克制、留白
+  配色：米白 #FAF7F2 | 浅灰 #F0EDE8 | 玫瑰金 #C49A76
+  动效档位：L1 精致静态 + 滚动揭示 + 购物车缩放动画
+  作者：Claude | 日期：2026-05-31 | 迭代 v2
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>理工 · 文创小物商店</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================================
+       一、CSS 变量 — 集中配色与质感
+       ======================================== */
+    :root {
+      /* 核心色（零硬编码 hex，全部通过变量引用） */
+      --cream:            #FAF7F2;
+      --light-gray:       #F0EDE8;
+      --warm-gray:        #E6E1D9;
+      --rose-gold:        #C49A76;
+      --rose-gold-deep:   #A87D5E;
+      --rose-gold-light:  #E8C9A8;
+      --rose-gold-rgb:    196, 154, 118;
+      --text-primary:     #2C2416;
+      --text-secondary:   #8C8278;
+      --text-tertiary:    #B5ADA3;
+      --white:            #FFFFFF;
+      --success:          #7FB069;
+
+      /* 阴影层级 */
+      --shadow-xs:   0 1px 2px rgba(44, 36, 22, 0.04);
+      --shadow-sm:   0 2px 8px rgba(44, 36, 22, 0.06);
+      --shadow-md:   0 8px 24px rgba(44, 36, 22, 0.08);
+      --shadow-lg:   0 16px 40px rgba(44, 36, 22, 0.10);
+      --shadow-xl:   0 24px 56px rgba(44, 36, 22, 0.12);
+      --shadow-card: 0 4px 20px rgba(44, 36, 22, 0.07);
+
+      /* 玻璃拟态 */
+      --glass-bg:       rgba(250, 247, 242, 0.72);
+      --glass-border:   rgba(var(--rose-gold-rgb), 0.12);
+      --glass-blur:     14px;
+
+      /* 圆角 */
+      --radius-xs:  8px;
+      --radius-sm:  12px;
+      --radius-md:  16px;
+      --radius-lg:  24px;
+      --radius-xl:  32px;
+
+      /* 间距 */
+      --space-xs:  4px;
+      --space-sm:  8px;
+      --space-md:  16px;
+      --space-lg:  24px;
+      --space-xl:  32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+
+      /* 字体 */
+      --font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-serif:  'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+
+      /* 过渡 */
+      --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-back:  cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+      --duration-fast:  0.15s;
+      --duration-base:  0.3s;
+      --duration-slow:  0.5s;
+
+      /* 布局 */
+      --content-max:    1280px;
+      --nav-height:     64px;
+    }
+
+    /* ========================================
+       二、全局重置 & Reduced Motion
+       ======================================== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--cream);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 100px;
+      padding-top: var(--nav-height);
+    }
+
+    /* === Reduced Motion 降级 === */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ========================================
+       三、顶部导航栏（全宽 sticky + 玻璃）
+       ======================================== */
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-xl);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .nav-inner {
+      max-width: var(--content-max);
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--text-primary);
+      user-select: none;
+    }
+
+    .nav-brand span { color: var(--rose-gold); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    /* 搜索框 */
+    .nav-search {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 8px 16px;
+      border-radius: 100px;
+      background: var(--light-gray);
+      border: 1px solid transparent;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      cursor: text;
+    }
+
+    .nav-search:hover { border-color: var(--warm-gray); }
+    .nav-search:focus-within {
+      border-color: rgba(var(--rose-gold-rgb), 0.35);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(var(--rose-gold-rgb), 0.08);
+    }
+
+    .nav-search input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: 0.8rem;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      width: 140px;
+    }
+
+    .nav-search input::placeholder { color: var(--text-tertiary); }
+    .nav-search .search-icon { font-size: 0.9rem; opacity: 0.5; }
+
+    /* 购物车图标 */
+    .nav-cart {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transition: all var(--duration-base) var(--ease-out-expo);
+    }
+
+    .nav-cart:hover { background: var(--light-gray); }
+    .nav-cart:active { transform: scale(0.92); }
+
+    .nav-cart .badge {
+      position: absolute;
+      top: 4px;
+      right: 2px;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      background: var(--rose-gold);
+      color: var(--white);
+      font-size: 0.675rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5px;
+      transition: transform 0.25s var(--ease-out-back);
+    }
+
+    .nav-cart .badge.bump { transform: scale(1.35); }
+
+    .nav-cart .badge:empty,
+    .nav-cart .badge[data-count="0"] {
+      display: none;
+    }
+
+    /* ========================================
+       四、Banner 横滑（修复 scroll-snap）
+       ======================================== */
+    .banner-section {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-xl) var(--space-md);
+    }
+
+    /* 外层滚动容器 */
+    .banner-scroll-wrapper {
+      position: relative;
+    }
+
+    .banner-scroll {
+      display: flex;
+      gap: var(--space-md);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding: 0 calc((100% - 84%) / 2);  /* 让首尾卡片也能 snap 到居中 */
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+
+    .banner-scroll::-webkit-scrollbar { display: none; }
+
+    .banner-card {
+      flex: 0 0 84%;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      height: 360px;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--duration-base) var(--ease-out-expo);
+      box-shadow: var(--shadow-md);
+    }
+
+    .banner-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .banner-card:active { transform: scale(0.98); }
+
+    /* Banner 渐变背景 */
+    .banner-bg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .banner-bg-1 { background: linear-gradient(160deg, #e8ddd0 0%, #c8b8a5 40%, #b8a088 100%); }
+    .banner-bg-2 { background: linear-gradient(160deg, #e2dce8 0%, #c4bdd0 40%, #a898b8 100%); }
+    .banner-bg-3 { background: linear-gradient(160deg, #e6dfd5 0%, #d4c8b0 40%, #c4a98a 100%); }
+
+    .banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(44, 36, 22, 0.02) 0%,
+        rgba(44, 36, 22, 0.18) 50%,
+        rgba(44, 36, 22, 0.42) 100%
+      );
+    }
+
+    .banner-text {
+      position: absolute;
+      bottom: var(--space-xl);
+      left: var(--space-xl);
+      right: var(--space-xl);
+      color: var(--white);
+    }
+
+    .banner-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--rose-gold-light);
+      margin-bottom: var(--space-sm);
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .banner-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: var(--space-xs);
+    }
+
+    .banner-sub {
+      font-size: 0.9rem;
+      font-weight: 300;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+
+    /* 点状指示器 */
+    .banner-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: var(--space-lg);
+    }
+
+    .banner-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--text-tertiary);
+      border: none;
+      cursor: pointer;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      padding: 0;
+    }
+
+    .banner-dot.active {
+      width: 28px;
+      background: var(--rose-gold);
+    }
+
+    /* 左右箭头 */
+    .banner-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: pointer;
+      font-size: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .banner-arrow:hover {
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-50%) scale(1.06);
+    }
+
+    .banner-arrow:active { transform: translateY(-50%) scale(0.94); }
+    .banner-arrow.prev { left: -12px; }
+    .banner-arrow.next { right: -12px; }
+
+    @media (max-width: 768px) {
+      .banner-arrow { display: none; }
+    }
+
+    /* ========================================
+       五、分类标签
+       ======================================== */
+    .category-section {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: var(--space-md) var(--space-xl);
+    }
+
+    .category-row {
+      display: flex;
+      gap: var(--space-sm);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .category-row::-webkit-scrollbar { display: none; }
+
+    .category-chip {
+      flex-shrink: 0;
+      padding: 10px 22px;
+      border-radius: 100px;
+      font-size: 0.825rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--light-gray);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .category-chip:hover {
+      color: var(--text-primary);
+      background: var(--warm-gray);
+    }
+
+    .category-chip.active {
+      color: var(--rose-gold-deep);
+      background: rgba(var(--rose-gold-rgb), 0.10);
+      border-color: rgba(var(--rose-gold-rgb), 0.28);
+      font-weight: 600;
+    }
+
+    /* ========================================
+       六、商品卡片网格（响应式 + 玻璃拟态）
+       ======================================== */
+    .products-section {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-xl) var(--space-3xl);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .section-count {
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+      font-weight: 400;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+
+    /* 卡片 — 玻璃拟态 + 细腻阴影 */
+    .product-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      box-shadow: var(--shadow-card);
+      /* 滚动揭示初始态 */
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    .product-card.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(var(--rose-gold-rgb), 0.22);
+    }
+
+    /* 图片区域 */
+    .product-card .card-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    /* 真实图片 */
+    .product-card .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease-out-expo);
+    }
+
+    .product-card .card-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      transition: transform 0.6s var(--ease-out-expo);
+    }
+
+    .product-card:hover .card-img-placeholder {
+      transform: scale(1.08);
+    }
+
+    .card-img-placeholder .bottle-icon {
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.10));
+    }
+
+    .card-img-1 { background: linear-gradient(160deg, #f5efe6 0%, #e8d5c0 100%); }
+    .card-img-2 { background: linear-gradient(160deg, #f0edf4 0%, #d8d0e8 100%); }
+    .card-img-3 { background: linear-gradient(160deg, #f2f0ea 0%, #ddd5c4 100%); }
+    .card-img-4 { background: linear-gradient(160deg, #f5f0ec 0%, #e0d4cc 100%); }
+
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      background: var(--rose-gold);
+      pointer-events: none;
+    }
+
+    /* 信息区 */
+    .card-info {
+      padding: var(--space-md);
+    }
+
+    .card-brand {
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--rose-gold);
+      margin-bottom: 4px;
+    }
+
+    .card-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+
+    .card-note {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-sm);
+      line-height: 1.5;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+
+    .card-price {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .card-price .currency {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* ========================================
+       七、数量选择器（+/- 增减控件）
+       ======================================== */
+    .qty-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--light-gray);
+      border-radius: 100px;
+      padding: 3px;
+    }
+
+    .qty-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: var(--white);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s var(--ease-out-expo);
+      box-shadow: var(--shadow-xs);
+      line-height: 1;
+    }
+
+    .qty-btn:hover {
+      background: var(--rose-gold);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(var(--rose-gold-rgb), 0.35);
+    }
+
+    .qty-btn:active {
+      transform: scale(0.85);
+      transition: all 0.08s ease;
+    }
+
+    .qty-btn.dec {
+      font-size: 1.2rem;
+      line-height: 0.8;
+    }
+
+    .qty-value {
+      min-width: 28px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      user-select: none;
+    }
+
+    /* 加入购物车按钮（初始态：只显示 +） */
+    .btn-cart-add {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: var(--rose-gold);
+      color: var(--white);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s var(--ease-out-back);
+      box-shadow: 0 3px 12px rgba(var(--rose-gold-rgb), 0.32);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .btn-cart-add:hover {
+      background: var(--rose-gold-deep);
+      box-shadow: 0 6px 20px rgba(var(--rose-gold-rgb), 0.45);
+      transform: scale(1.1);
+    }
+
+    .btn-cart-add:active {
+      transform: scale(0.82);
+      transition: all 0.08s ease;
+    }
+
+    /* 涟漪 */
+    .btn-cart-add.ripple::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid var(--rose-gold);
+      animation: ripple-out 0.55s ease-out forwards;
+    }
+
+    @keyframes ripple-out {
+      0%   { transform: scale(0.7); opacity: 1; }
+      100% { transform: scale(2.0); opacity: 0; }
+    }
+
+    /* 成功状态 */
+    .btn-cart-add.success-flash {
+      background: var(--success);
+      box-shadow: 0 3px 12px rgba(127, 176, 105, 0.4);
+      pointer-events: none;
+    }
+
+    /* ========================================
+       八、底部结算栏（全宽固定）
+       ======================================== */
+    .checkout-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border-top: 1px solid var(--glass-border);
+      padding: var(--space-md) var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .checkout-inner {
+      max-width: var(--content-max);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .checkout-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .checkout-count {
+      font-size: 0.725rem;
+      color: var(--text-tertiary);
+      margin-bottom: 2px;
+    }
+
+    .checkout-total {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .checkout-total .currency {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .btn-checkout {
+      padding: 14px 40px;
+      border-radius: 100px;
+      border: none;
+      background: var(--text-primary);
+      color: var(--white);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      white-space: nowrap;
+      min-width: 120px;
+    }
+
+    .btn-checkout:hover:not(:disabled) {
+      background: #3D3428;
+      transform: scale(1.04);
+    }
+
+    .btn-checkout:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    .btn-checkout:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* ========================================
+       九、Toast 提示
+       ======================================== */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-16px);
+      background: var(--text-primary);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 0.825rem;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+      transition: all 0.4s var(--ease-out-expo);
+      box-shadow: var(--shadow-xl);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ========================================
+       十、购物车抽屉（点击右上角购物车弹出）
+       ======================================== */
+    .cart-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 36, 22, 0.25);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration-base) var(--ease-out-expo);
+    }
+
+    .cart-drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 400px;
+      max-width: 90vw;
+      background: var(--white);
+      z-index: 301;
+      box-shadow: var(--shadow-xl);
+      transform: translateX(100%);
+      transition: transform 0.4s var(--ease-in-out);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg) var(--space-xl);
+      border-bottom: 1px solid var(--warm-gray);
+    }
+
+    .cart-drawer-header h3 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+
+    .cart-drawer-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--light-gray);
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .cart-drawer-close:hover { background: var(--warm-gray); }
+
+    .cart-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-lg);
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: var(--space-3xl) var(--space-lg);
+      color: var(--text-tertiary);
+      font-size: 0.9rem;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--warm-gray);
+    }
+
+    .cart-item-img {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+
+    .cart-item-info { flex: 1; min-width: 0; }
+
+    .cart-item-name {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .cart-item-note {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-item-price {
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .cart-drawer-footer {
+      padding: var(--space-lg) var(--space-xl);
+      border-top: 1px solid var(--warm-gray);
+    }
+
+    /* ========================================
+       十一、响应式
+       ======================================== */
+    /* 平板 */
+    @media (max-width: 1024px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+      }
+      .banner-card { height: 280px; }
+      .banner-title { font-size: 1.5rem; }
+    }
+
+    /* ========================================
+       十二、后台管理面板
+       ======================================== */
+    /* 管理入口按钮 */
+    .admin-toggle {
+      position: fixed;
+      bottom: 100px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 150;
+      box-shadow: var(--shadow-md);
+      transition: all var(--duration-base) var(--ease-out-expo);
+      opacity: 0.55;
+    }
+    .admin-toggle:hover,
+    .admin-toggle.active { opacity: 1; background: var(--white); box-shadow: var(--shadow-lg); }
+
+    /* 管理面板浮层 */
+    .admin-panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 36, 22, 0.3);
+      z-index: 400;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration-base) var(--ease-out-expo);
+    }
+    .admin-panel-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .admin-panel {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 100%;
+      max-width: 900px;
+      max-height: 85vh;
+      background: var(--white);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      z-index: 401;
+      box-shadow: var(--shadow-xl);
+      transition: transform 0.4s var(--ease-in-out);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .admin-panel.open { transform: translateX(-50%) translateY(0); }
+
+    .admin-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg) var(--space-xl);
+      border-bottom: 1px solid var(--warm-gray);
+      flex-shrink: 0;
+    }
+    .admin-panel-header h3 {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .admin-panel-header h3 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+    .admin-panel-actions { display: flex; gap: var(--space-sm); }
+
+    .admin-panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-lg) var(--space-xl);
+    }
+
+    .admin-product-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .admin-product-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md);
+      border-radius: var(--radius-sm);
+      background: var(--cream);
+      border: 1px solid var(--warm-gray);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out-expo);
+    }
+    .admin-product-item:hover { border-color: var(--rose-gold); box-shadow: var(--shadow-sm); }
+    .admin-product-item .thumb {
+      width: 48px; height: 48px; border-radius: var(--radius-xs); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    }
+    .admin-product-item .meta { flex: 1; min-width: 0; }
+    .admin-product-item .meta .pname { font-weight: 600; font-size: 0.9rem; }
+    .admin-product-item .meta .pcat  { font-size: 0.7rem; color: var(--text-tertiary); }
+    .admin-product-item .price-tag { font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
+    .admin-product-item .btn-del {
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: transparent; color: var(--text-tertiary); cursor: pointer;
+      font-size: 1rem; transition: all var(--duration-fast) var(--ease-out-expo);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .admin-product-item .btn-del:hover { background: #fde8e8; color: #d32f2f; }
+
+    /* 分类管理列表项 */
+    .admin-cat-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 6px 0;
+    }
+    .admin-cat-item .cat-del-btn {
+      width: 28px; height: 28px; border-radius: 50%; border: none;
+      background: transparent; color: var(--text-tertiary); cursor: pointer;
+      font-size: 0.85rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--duration-fast) var(--ease-out-expo);
+    }
+    .admin-cat-item .cat-del-btn:hover { background: #fde8e8; color: #d32f2f; }
+
+    /* Banner 管理列表项 */
+    .admin-banner-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+      background: var(--cream);
+      border: 1px solid var(--warm-gray);
+      margin-bottom: 4px;
+    }
+
+    .admin-panel-footer {
+      display: flex;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl);
+      border-top: 1px solid var(--warm-gray);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    /* ========================================
+       十三、编辑弹窗
+       ======================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 36, 22, 0.4);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration-base) var(--ease-out-expo);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .modal-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      width: 90%;
+      max-width: 520px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+      transform: translateY(20px);
+      transition: transform 0.35s var(--ease-out-expo);
+    }
+    .modal-overlay.open .modal-card { transform: translateY(0); }
+
+    .modal-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-bottom: var(--space-lg);
+    }
+
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--warm-gray);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      background: var(--cream);
+      transition: all var(--duration-fast) var(--ease-out-expo);
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--rose-gold);
+      box-shadow: 0 0 0 3px rgba(var(--rose-gold-rgb), 0.1);
+      background: var(--white);
+    }
+    .form-row { display: flex; gap: var(--space-md); }
+    .form-row .form-group { flex: 1; }
+
+    .modal-actions {
+      display: flex;
+      gap: var(--space-sm);
+      justify-content: flex-end;
+      margin-top: var(--space-lg);
+    }
+
+    /* 通用按钮 */
+    .btn-sm {
+      padding: 8px 18px;
+      border-radius: 100px;
+      border: 1px solid var(--warm-gray);
+      background: var(--white);
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out-expo);
+    }
+    .btn-sm:hover { background: var(--light-gray); }
+    .btn-sm.primary {
+      background: var(--rose-gold);
+      border-color: var(--rose-gold);
+      color: var(--white);
+    }
+    .btn-sm.primary:hover { background: var(--rose-gold-deep); }
+    .btn-sm.danger { color: #d32f2f; }
+    .btn-sm.danger:hover { background: #fde8e8; border-color: #fde8e8; }
+
+    /* ===== 手机端全面适配 ===== */
+    @media (max-width: 640px) {
+      :root {
+        --space-xl: 12px;
+        --space-lg: 12px;
+        --space-md: 10px;
+        --nav-height: 56px;
+      }
+
+      body {
+        padding-top: var(--nav-height);
+        padding-bottom: 90px;
+      }
+
+      /* 导航栏 */
+      .nav-bar { padding: 0 var(--space-md); }
+      .nav-brand { font-size: 1.1rem; }
+      .nav-search { display: none; }
+      .nav-cart { width: 40px; height: 40px; }
+
+      /* Banner */
+      .banner-section { padding: var(--space-md) 0 var(--space-sm); }
+      .banner-scroll { padding: 0 var(--space-md); gap: var(--space-sm); }
+      .banner-card { flex: 0 0 88%; height: 180px; }
+      .banner-arrow { display: none; }
+      .banner-text { bottom: var(--space-md); left: var(--space-md); right: var(--space-md); }
+      .banner-tag { font-size: 0.6rem; padding: 3px 10px; margin-bottom: 6px; }
+      .banner-title { font-size: 1.15rem; }
+      .banner-sub { font-size: 0.7rem; }
+      .banner-dots { margin-top: var(--space-sm); gap: 6px; }
+
+      /* 分类 */
+      .category-section { padding: var(--space-sm) var(--space-md); }
+      .category-chip { padding: 7px 14px; font-size: 0.75rem; }
+
+      /* 商品网格 */
+      .products-section { padding: var(--space-sm) var(--space-md) 40px; }
+      .section-header { margin-bottom: var(--space-sm); }
+      .section-title { font-size: 1.05rem; }
+      .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .card-info { padding: 10px; }
+      .card-brand { font-size: 0.6rem; }
+      .card-name { font-size: 0.8rem; }
+      .card-note { font-size: 0.65rem; margin-bottom: 6px; }
+      .card-price { font-size: 0.9rem; }
+      .btn-cart-add { width: 34px; height: 34px; font-size: 1.1rem; }
+      .qty-control { padding: 2px; }
+      .qty-btn { width: 26px; height: 26px; }
+      .qty-value { font-size: 0.75rem; min-width: 20px; }
+
+      /* 结算栏 */
+      .checkout-bar { padding: 10px var(--space-md); }
+      .checkout-total { font-size: 1.1rem; }
+      .btn-checkout { padding: 12px 28px; font-size: 0.8rem; min-width: 90px; }
+
+      /* Toast */
+      .toast { top: 70px; font-size: 0.75rem; padding: 10px 20px; }
+
+      /* 购物车抽屉 — 全宽 */
+      .cart-drawer { width: 100%; max-width: 100vw; }
+
+      /* 管理面板 — 全宽 */
+      .admin-panel { max-width: 100%; max-height: 90vh; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+      .admin-panel-header,
+      .admin-panel-body { padding: var(--space-md); }
+      .admin-panel-footer { padding: var(--space-sm) var(--space-md); flex-wrap: wrap; gap: 6px; }
+      .admin-toggle { bottom: 90px; right: 12px; width: 40px; height: 40px; }
+      .admin-product-item { padding: var(--space-sm); gap: var(--space-sm); }
+      .admin-product-item .thumb { width: 40px; height: 40px; font-size: 1.2rem; }
+      .admin-product-item .meta .pname { font-size: 0.8rem; }
+      .admin-product-item .meta .pcat { font-size: 0.65rem; }
+      .admin-product-item .price-tag { font-size: 0.8rem; }
+      .admin-cat-item,
+      .admin-banner-item { flex-wrap: wrap; }
+      .admin-banner-item .meta { flex-basis: 100%; }
+
+      /* 弹窗 — 全宽 */
+      .modal-card { width: 94%; max-width: none; padding: var(--space-lg); border-radius: var(--radius-md); max-height: 90vh; }
+      .form-row { flex-direction: column; gap: 0; }
+      .modal-card h3 { font-size: 1rem; margin-bottom: var(--space-md); }
+      .form-group label { font-size: 0.7rem; }
+      .form-group input,
+      .form-group select,
+      .form-group textarea { padding: 10px 12px; font-size: 0.85rem; }
+      .btn-sm { padding: 8px 14px; font-size: 0.75rem; }
+
+      /* 触摸目标 ≥ 44×44px */
+      .category-chip, .btn-cart-add, .qty-btn, .btn-checkout,
+      .btn-sm, .nav-cart, .admin-toggle {
+        min-height: 44px; min-width: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======== 导航栏 ======== -->
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <div class="nav-brand">理<span>工</span></div>
+      <div class="nav-actions">
+        <label class="nav-search">
+          <span class="search-icon">&#x1F50D;</span>
+          <input type="search" placeholder="搜索文创…" aria-label="搜索文创">
+        </label>
+        <button class="nav-cart" id="navCartBtn" aria-label="购物车">
+          &#x1F6CD;
+          <span class="badge" id="cartBadge" data-count="0"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======== Banner 横滑（JS 动态渲染） ======== -->
+  <section class="banner-section" aria-label="精选 Banner">
+    <div class="banner-scroll-wrapper">
+      <button class="banner-arrow prev" id="bannerPrev" aria-label="上一张">&#x2039;</button>
+      <button class="banner-arrow next" id="bannerNext" aria-label="下一张">&#x203A;</button>
+      <div class="banner-scroll" id="bannerScroll">
+        <!-- JS 动态渲染 -->
+      </div>
+    </div>
+    <div class="banner-dots" id="bannerDots">
+      <!-- JS 动态渲染 -->
+    </div>
+  </section>
+
+  <!-- ======== 分类标签（JS 动态渲染） ======== -->
+  <div class="category-section">
+    <div class="category-row" id="categoryRow">
+      <!-- JS 动态渲染 -->
+    </div>
+  </div>
+
+  <!-- ======== 商品列表 ======== -->
+  <section class="products-section" aria-label="商品列表">
+    <div class="section-header">
+      <h2 class="section-title">全部文创</h2>
+      <span class="section-count" id="productCount">共 6 件</span>
+    </div>
+    <div class="products-grid" id="productsGrid">
+      <!-- JS 动态渲染 -->
+    </div>
+  </section>
+
+  <!-- ======== 底部结算栏 ======== -->
+  <div class="checkout-bar" id="checkoutBar">
+    <div class="checkout-inner">
+      <div class="checkout-info">
+        <span class="checkout-count" id="checkoutCount">暂未选择商品</span>
+        <span class="checkout-total">
+          <span class="currency">¥</span><span id="checkoutTotal">0</span>
+        </span>
+      </div>
+      <button class="btn-checkout" id="btnCheckout" disabled>结算</button>
+    </div>
+  </div>
+
+  <!-- ======== Toast ======== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ======== 管理面板入口 ======== -->
+  <button class="admin-toggle" id="adminToggle" title="商品管理" aria-label="商品管理">⚙</button>
+
+  <!-- ======== 购物车抽屉 ======== -->
+  <div class="cart-drawer-overlay" id="cartOverlay"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h3>购物车</h3>
+      <button class="cart-drawer-close" id="cartDrawerClose" aria-label="关闭">✕</button>
+    </div>
+    <div class="cart-drawer-body" id="cartDrawerBody">
+      <div class="cart-empty">购物车是空的</div>
+    </div>
+    <div class="cart-drawer-footer">
+      <button class="btn-checkout" id="cartDrawerCheckout" style="width:100%;" disabled>去结算</button>
+    </div>
+  </div>
+
+  <!-- ========================================
+       管理面板（底部浮层）
+       ======================================== -->
+  <div class="admin-panel-overlay" id="adminOverlay"></div>
+  <div class="admin-panel" id="adminPanel">
+    <div class="admin-panel-header">
+      <h3><span class="dot"></span> 商品管理</h3>
+      <div class="admin-panel-actions">
+        <button class="btn-sm" id="adminImportBtn" title="从 JSON 导入">📥 导入</button>
+        <button class="btn-sm" id="adminExportBtn" title="导出为 JSON">📤 导出</button>
+      </div>
+    </div>
+    <div class="admin-panel-body">
+      <!-- Banner 管理 -->
+      <div style="margin-bottom:20px;">
+        <h4 style="font-size:0.85rem;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+          🎠 Banner 管理
+          <span style="font-weight:400;font-size:0.7rem;color:var(--text-tertiary);">（可编辑 / 新增 / 删除）</span>
+        </h4>
+        <div class="admin-banner-list" id="adminBannerList"></div>
+        <button class="btn-sm primary" id="adminAddBannerBtn" style="margin-top:8px;">＋ 添加 Banner</button>
+        <hr style="border:none;border-top:1px solid var(--warm-gray);margin:18px 0;">
+      </div>
+      <!-- 分类管理 -->
+      <div style="margin-bottom:20px;">
+        <h4 style="font-size:0.85rem;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+          📂 分类管理
+          <span style="font-weight:400;font-size:0.7rem;color:var(--text-tertiary);">（可改名 / 删除 / 新增）</span>
+        </h4>
+        <div class="admin-cat-list" id="adminCatList"></div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <input type="text" id="newCatKey" placeholder="分类 key（英文）"
+                 style="flex:1;padding:7px 12px;border:1px solid var(--warm-gray);border-radius:8px;font-size:0.8rem;font-family:var(--font-sans);">
+          <input type="text" id="newCatLabel" placeholder="分类名称（中文）"
+                 style="flex:1;padding:7px 12px;border:1px solid var(--warm-gray);border-radius:8px;font-size:0.8rem;font-family:var(--font-sans);">
+          <button class="btn-sm primary" id="adminAddCatBtn" style="flex-shrink:0;">＋ 添加</button>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--warm-gray);margin:18px 0;">
+      </div>
+      <!-- 商品列表 -->
+      <h4 style="font-size:0.85rem;font-weight:600;margin-bottom:10px;">📦 商品列表</h4>
+      <div class="admin-product-list" id="adminProductList"></div>
+    </div>
+    <div class="admin-panel-footer">
+      <button class="btn-sm primary" id="adminAddBtn">＋ 添加商品</button>
+      <button class="btn-sm" id="adminResetBtn">↺ 恢复默认</button>
+      <span style="flex:1;"></span>
+      <button class="btn-sm" id="adminCloseBtn">关闭面板</button>
+    </div>
+  </div>
+
+  <!-- ========================================
+       Banner 编辑弹窗
+       ======================================== -->
+  <div class="modal-overlay" id="bannerEditModal">
+    <div class="modal-card">
+      <h3>编辑 Banner</h3>
+      <form id="bannerEditForm" autocomplete="off">
+        <input type="hidden" id="bannerEditIndex">
+        <div class="form-group">
+          <label>标签（如 New Arrival）</label>
+          <input type="text" id="bannerEditTag" required placeholder="New Arrival">
+        </div>
+        <div class="form-group">
+          <label>标题</label>
+          <input type="text" id="bannerEditTitle" required placeholder="四季书签·春">
+        </div>
+        <div class="form-group">
+          <label>副标题/描述</label>
+          <input type="text" id="bannerEditSub" placeholder="铜镀玫瑰金 · 樱花镂空">
+        </div>
+        <div class="form-group">
+          <label>背景配色</label>
+          <select id="bannerEditBg">
+            <option value="banner-bg-1">暖米棕</option>
+            <option value="banner-bg-2">薰衣草紫</option>
+            <option value="banner-bg-3">暖茶棕</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-sm" onclick="document.getElementById('bannerEditModal').classList.remove('open')">取消</button>
+          <button type="submit" class="btn-sm primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================
+       编辑弹窗
+       ======================================== -->
+  <div class="modal-overlay" id="editModalOverlay">
+    <div class="modal-card" id="editModalCard">
+      <h3 id="editModalTitle">编辑商品</h3>
+      <form id="editForm" autocomplete="off">
+        <input type="hidden" id="editId">
+        <div class="form-row">
+          <div class="form-group" style="flex:2;">
+            <label>商品名称 *</label>
+            <input type="text" id="editName" required placeholder="例：月下白麝">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>品牌</label>
+            <input type="text" id="editBrand" placeholder="例：ESSENCE">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>香调描述</label>
+            <input type="text" id="editNote" placeholder="例：白麝香 · 琥珀 · 雪松">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>价格 (¥)</label>
+            <input type="number" id="editPrice" required min="0" step="1" placeholder="680">
+          </div>
+          <div class="form-group">
+            <label>分类</label>
+            <select id="editCategory">
+              <!-- JS 动态渲染 -->
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>标签/徽章（留空不显示）</label>
+            <input type="text" id="editBadge" placeholder="新品 / 限定 / 典藏">
+          </div>
+          <div class="form-group">
+            <label>卡片配色</label>
+            <select id="editGradient">
+              <option value="card-img-1">暖白调</option>
+              <option value="card-img-2">紫灰调</option>
+              <option value="card-img-3">米棕调</option>
+              <option value="card-img-4">灰粉调</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>图标 Emoji</label>
+            <input type="text" id="editEmoji" placeholder="🌙">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>商品图片（PNG / JPG / WebP / SVG）</label>
+          <div style="display:flex;gap:12px;align-items:start;">
+            <div id="editImagePreview" style="width:80px;height:80px;border-radius:12px;border:2px dashed var(--warm-gray);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;background:var(--cream);">
+              <span id="editImagePreviewIcon">🖼</span>
+              <img id="editImagePreviewImg" style="display:none;width:100%;height:100%;object-fit:cover;" alt="">
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+              <input type="file" id="editImageFile" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif" style="padding:8px;font-size:0.8rem;">
+              <button type="button" class="btn-sm" id="editImageClearBtn" style="align-self:flex-start;">清除图片</button>
+              <span style="font-size:0.65rem;color:var(--text-tertiary);">支持 PNG/JPG/WebP/SVG/GIF，自动转为本地存储（base64）</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-sm danger" id="editDeleteBtn" style="margin-right:auto;">🗑 删除</button>
+          <button type="button" class="btn-sm" id="editCancelBtn">取消</button>
+          <button type="submit" class="btn-sm primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    /* ========================================
+       数据层 — 商品列表
+       ======================================== */
+    // 分类数据（key 用于数据关联，label 用于显示）
+    // Banner 数据（可编辑）
+    const banners = [
+      { tag: 'New Arrival', title: '四季书签·春',     sub: '铜镀玫瑰金 · 樱花镂空 · 流苏书签', bg: 'banner-bg-1' },
+      { tag: 'Best Seller', title: '故宫雪景冰箱贴',   sub: '太和殿雪景 · 亚克力浮雕 · 磁吸',   bg: 'banner-bg-2' },
+      { tag: 'Hot Pick',    title: '马卡龙色系笔记本', sub: 'A5/B6双尺寸 · 道林纸 · 软硬壳可选', bg: 'banner-bg-3' }
+    ];
+
+    const categories = [
+      { key: 'bookmark',  label: '四季书签' },
+      { key: 'magnet',    label: '冰箱贴' },
+      { key: 'notebook',  label: '马卡龙色系笔记本' }
+    ];
+
+    const products = [
+      { id: 1, brand: '理工', name: '春樱书签',   note: '樱花浮雕 · 铜镀玫瑰金 · 流苏坠',   price: 38,  category: 'bookmark',  badge: '新品',     gradient: 'card-img-1', emoji: '🌸', image: '' },
+      { id: 2, brand: '理工', name: '夏荷书签',   note: '荷叶镂空 · 黄铜做旧 · 绿松石缀',   price: 42,  category: 'bookmark',  badge: '',         gradient: 'card-img-2', emoji: '🍃', image: '' },
+      { id: 3, brand: '理工', name: '故宫雪景',   note: '太和殿雪景 · 亚克力浮雕 · 磁吸',   price: 28,  category: 'magnet',    badge: '热卖',     gradient: 'card-img-3', emoji: '🏯', image: '' },
+      { id: 4, brand: '理工', name: '猫咪系列',   note: '六只姿态各异的猫 · 软磁 · 礼盒装', price: 55,  category: 'magnet',    badge: '',         gradient: 'card-img-4', emoji: '🐱', image: '' },
+      { id: 5, brand: '理工', name: '马卡龙·樱花粉', note: 'A5软面 · 80g道林纸 · 192页',     price: 68,  category: 'notebook',  badge: '爆款',     gradient: 'card-img-1', emoji: '📒', image: '' },
+      { id: 6, brand: '理工', name: '马卡龙·薄荷绿', note: 'B6硬壳 · 100g象牙纸 · 256页',    price: 79,  category: 'notebook',  badge: '',         gradient: 'card-img-2', emoji: '📘', image: '' }
+    ];
+
+    /* ========================================
+       状态层
+       ======================================== */
+    let cart = [];              // { id, qty }
+    let activeCategory = 'all';
+
+    /* ========================================
+       DOM 引用
+       ======================================== */
+    const $productsGrid   = document.getElementById('productsGrid');
+    const $productCount   = document.getElementById('productCount');
+    const $checkoutCount  = document.getElementById('checkoutCount');
+    const $checkoutTotal  = document.getElementById('checkoutTotal');
+    const $btnCheckout    = document.getElementById('btnCheckout');
+    const $cartBadge      = document.getElementById('cartBadge');
+    const $bannerScroll        = document.getElementById('bannerScroll');
+    const $bannerDotsContainer = document.getElementById('bannerDots');
+    const $bannerPrev          = document.getElementById('bannerPrev');
+    const $bannerNext          = document.getElementById('bannerNext');
+    const $toast          = document.getElementById('toast');
+    const $categoryRow    = document.getElementById('categoryRow');
+    const $navCartBtn     = document.getElementById('navCartBtn');
+    const $cartOverlay    = document.getElementById('cartOverlay');
+    const $cartDrawer     = document.getElementById('cartDrawer');
+    const $cartDrawerBody = document.getElementById('cartDrawerBody');
+    const $cartDrawerClose = document.getElementById('cartDrawerClose');
+    const $cartDrawerCheckout = document.getElementById('cartDrawerCheckout');
+
+    /* ========================================
+       工具函数
+       ======================================== */
+    function getCartItem(id)   { return cart.find(c => c.id === id); }
+    function getProduct(id)    { return products.find(p => p.id === id); }
+    function totalItems()      { return cart.reduce((s, i) => s + i.qty, 0); }
+    function totalPrice()      { return cart.reduce((s, i) => { const p = getProduct(i.id); return s + (p ? p.price * i.qty : 0); }, 0); }
+
+    /* ========================================
+       渲染层 — 商品卡片
+       ======================================== */
+    function renderProducts(filter = 'all') {
+      const filtered = filter === 'all'
+        ? products
+        : products.filter(p => p.category === filter);
+
+      $productCount.textContent = `共 ${filtered.length} 件`;
+
+      $productsGrid.innerHTML = filtered.map(p => {
+        const cartItem = getCartItem(p.id);
+        const qty = cartItem ? cartItem.qty : 0;
+
+        // 右侧控件：未加入显示 + 按钮，已加入显示数量调节器
+        let actionHTML;
+        if (qty > 0) {
+          actionHTML = `
+            <div class="qty-control">
+              <button class="qty-btn dec" data-id="${p.id}" aria-label="减少数量">−</button>
+              <span class="qty-value">${qty}</span>
+              <button class="qty-btn inc" data-id="${p.id}" aria-label="增加数量">+</button>
+            </div>`;
+        } else {
+          actionHTML = `<button class="btn-cart-add" data-id="${p.id}" aria-label="加入购物车">+</button>`;
+        }
+
+        // 图片区域：有真实图片用 <img>，否则用渐变+emoji 占位
+        const imgHTML = p.image
+          ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+          : '';
+        const placeholderHTML = p.image
+          ? `<div class="card-img-placeholder" style="display:none;"><span class="bottle-icon">${p.emoji}</span></div>`
+          : `<div class="card-img-placeholder"><span class="bottle-icon">${p.emoji}</span></div>`;
+
+        return `
+          <div class="product-card" data-id="${p.id}">
+            <div class="card-img ${p.gradient}">
+              ${imgHTML}
+              ${placeholderHTML}
+              ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
+            </div>
+            <div class="card-info">
+              <div class="card-brand">${p.brand}</div>
+              <div class="card-name">${p.name}</div>
+              <div class="card-note">${p.note}</div>
+              <div class="card-bottom">
+                <span class="card-price">
+                  <span class="currency">¥</span>${p.price}
+                </span>
+                ${actionHTML}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // 绑定事件
+      bindCartEvents();
+      // 滚动揭示
+      initReveal();
+    }
+
+    /* ========================================
+       事件绑定 — 购物车按钮
+       ======================================== */
+    function bindCartEvents() {
+      // "加入购物车"按钮（初始 +）
+      document.querySelectorAll('.btn-cart-add').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.id);
+          addToCart(id, btn);
+        });
+      });
+
+      // 增加按钮（qty-control 内的 +）
+      document.querySelectorAll('.qty-btn.inc').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.id);
+          incrementCart(id);
+        });
+      });
+
+      // 减少按钮（qty-control 内的 −）
+      document.querySelectorAll('.qty-btn.dec').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.id);
+          decrementCart(id);
+        });
+      });
+    }
+
+    /* ========================================
+       购物车操作
+       ======================================== */
+    function addToCart(id, btnElement) {
+      const existing = getCartItem(id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, qty: 1 });
+      }
+
+      // 按钮动画
+      if (btnElement) {
+        btnElement.classList.add('ripple');
+        btnElement.classList.add('success-flash');
+        btnElement.textContent = '✓';
+        setTimeout(() => {
+          btnElement.classList.remove('ripple');
+          btnElement.classList.remove('success-flash');
+        }, 600);
+      }
+
+      // 重新渲染（显示数量选择器）
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+      const product = getProduct(id);
+      showToast(`已添加「${product.name}」`);
+    }
+
+    function incrementCart(id) {
+      const item = getCartItem(id);
+      if (!item) return;
+      item.qty += 1;
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+    }
+
+    function decrementCart(id) {
+      const item = getCartItem(id);
+      if (!item) return;
+      item.qty -= 1;
+      if (item.qty <= 0) {
+        cart = cart.filter(c => c.id !== id);
+        const product = getProduct(id);
+        showToast(`已移除「${product.name}」`);
+      }
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+    }
+
+    /* ========================================
+       结算栏更新
+       ======================================== */
+    function updateCheckoutBar() {
+      const count = totalItems();
+      const price = totalPrice();
+
+      if (count === 0) {
+        $checkoutCount.textContent = '暂未选择商品';
+        $checkoutTotal.textContent = '0';
+        $btnCheckout.disabled = true;
+      } else {
+        $checkoutCount.textContent = `共 ${count} 件商品`;
+        $checkoutTotal.textContent = price.toLocaleString();
+        $btnCheckout.disabled = false;
+      }
+    }
+
+    function updateCartBadge() {
+      const count = totalItems();
+      $cartBadge.textContent = count;
+      $cartBadge.setAttribute('data-count', count);
+      // 徽标弹跳动画
+      $cartBadge.classList.add('bump');
+      setTimeout(() => $cartBadge.classList.remove('bump'), 300);
+    }
+
+    /* ========================================
+       Toast
+       ======================================== */
+    let toastTimer;
+    function showToast(msg) {
+      clearTimeout(toastTimer);
+      $toast.textContent = msg;
+      $toast.classList.add('show');
+      toastTimer = setTimeout(() => $toast.classList.remove('show'), 1800);
+    }
+
+    /* ========================================
+       购物车抽屉
+       ======================================== */
+    function openCartDrawer() {
+      renderCartDrawer();
+      $cartOverlay.classList.add('open');
+      $cartDrawer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCartDrawer() {
+      $cartOverlay.classList.remove('open');
+      $cartDrawer.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function renderCartDrawer() {
+      if (cart.length === 0) {
+        $cartDrawerBody.innerHTML = '<div class="cart-empty">购物车是空的</div>';
+        $cartDrawerCheckout.disabled = true;
+        return;
+      }
+
+      $cartDrawerBody.innerHTML = cart.map(item => {
+        const p = getProduct(item.id);
+        if (!p) return '';
+        return `
+          <div class="cart-item">
+            <div class="cart-item-img ${p.gradient}" style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;">${p.emoji}</div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">${p.name}</div>
+              <div class="cart-item-note">${p.note}</div>
+              <div class="qty-control" style="margin-top:6px;">
+                <button class="qty-btn dec drawer-dec" data-id="${item.id}" aria-label="减少">−</button>
+                <span class="qty-value">${item.qty}</span>
+                <button class="qty-btn inc drawer-inc" data-id="${item.id}" aria-label="增加">+</button>
+              </div>
+            </div>
+            <div class="cart-item-price">¥${(p.price * item.qty).toLocaleString()}</div>
+          </div>`;
+      }).join('');
+
+      $cartDrawerCheckout.disabled = false;
+
+      // 抽屉内的 +/- 事件
+      document.querySelectorAll('.drawer-inc').forEach(btn => {
+        btn.addEventListener('click', () => {
+          incrementCart(parseInt(btn.dataset.id));
+          renderCartDrawer();
+          updateCheckoutBar();
+          updateCartBadge();
+        });
+      });
+      document.querySelectorAll('.drawer-dec').forEach(btn => {
+        btn.addEventListener('click', () => {
+          decrementCart(parseInt(btn.dataset.id));
+          renderCartDrawer();
+          renderProducts(activeCategory);
+          updateCheckoutBar();
+          updateCartBadge();
+        });
+      });
+    }
+
+    $navCartBtn.addEventListener('click', openCartDrawer);
+    $cartOverlay.addEventListener('click', closeCartDrawer);
+    $cartDrawerClose.addEventListener('click', closeCartDrawer);
+
+    $btnCheckout.addEventListener('click', () => {
+      if (cart.length === 0) return;
+      openCartDrawer();
+    });
+
+    $cartDrawerCheckout.addEventListener('click', () => {
+      if (cart.length === 0) return;
+      showToast(`感谢选购！共 ${totalItems()} 件商品，即将跳转结算…`);
+      $cartDrawerCheckout.style.transform = 'scale(0.94)';
+      setTimeout(() => { $cartDrawerCheckout.style.transform = ''; }, 150);
+    });
+
+    /* ========================================
+       分类筛选
+       ======================================== */
+    $categoryRow.addEventListener('click', (e) => {
+      const chip = e.target.closest('.category-chip');
+      if (!chip) return;
+      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeCategory = chip.dataset.cat;
+      renderProducts(activeCategory);
+    });
+
+    /* ========================================
+       Banner 横滑（修复版）
+       ======================================== */
+    function getBannerCardWidth() {
+      const card = $bannerScroll.querySelector('.banner-card');
+      if (!card) return 0;
+      const cardW = card.offsetWidth;
+      const gap = parseInt(getComputedStyle($bannerScroll).gap) || 16;
+      return cardW + gap;
+    }
+
+    function getBannerIndex() {
+      const step = getBannerCardWidth();
+      if (step === 0) return 0;
+      return Math.round($bannerScroll.scrollLeft / step);
+    }
+
+    function getBannerDots() { return document.querySelectorAll('#bannerDots .banner-dot'); }
+
+    function updateBannerDots() {
+      const idx = getBannerIndex();
+      getBannerDots().forEach((dot, i) => dot.classList.toggle('active', i === idx));
+    }
+
+    function scrollToBanner(index) {
+      const step = getBannerCardWidth();
+      $bannerScroll.scrollTo({ left: step * index, behavior: 'smooth' });
+    }
+
+    // 滚动监听
+    $bannerScroll.addEventListener('scroll', updateBannerDots, { passive: true });
+
+    // 指示器点击
+    $bannerDotsContainer.addEventListener('click', (e) => {
+      const dot = e.target.closest('.banner-dot');
+      if (!dot) return;
+      scrollToBanner(parseInt(dot.dataset.index));
+    });
+
+    // 左右箭头
+    $bannerPrev.addEventListener('click', () => {
+      const idx = getBannerIndex();
+      scrollToBanner(Math.max(0, idx - 1));
+    });
+
+    $bannerNext.addEventListener('click', () => {
+      const idx = getBannerIndex();
+      const dots = getBannerDots();
+      scrollToBanner(Math.min(dots.length - 1, idx + 1));
+    });
+
+    let resizeDebounce;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeDebounce);
+      resizeDebounce = setTimeout(updateBannerDots, 100);
+    });
+
+    // 键盘左右键支持
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); const idx = getBannerIndex(); scrollToBanner(Math.max(0, idx - 1)); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); const idx = getBannerIndex(); const dots = getBannerDots(); scrollToBanner(Math.min(dots.length - 1, idx + 1)); }
+    });
+
+    // Escape 关闭抽屉
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && $cartDrawer.classList.contains('open')) {
+        closeCartDrawer();
+      }
+    });
+
+    /* ========================================
+       滚动揭示（IntersectionObserver）
+       ======================================== */
+    function initReveal() {
+      const cards = document.querySelectorAll('.product-card:not(.revealed)');
+      if (cards.length === 0) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            // 逐张卡片延时出现
+            const delay = Array.from(cards).indexOf(entry.target) % 6;
+            setTimeout(() => {
+              entry.target.classList.add('revealed');
+            }, delay * 60);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+      cards.forEach(card => observer.observe(card));
+    }
+
+    /* ========================================
+       初始化
+       ======================================== */
+    function init() {
+      initBanners();
+      initProducts();
+      initCategories();
+      renderBanners();
+      renderCategories();
+      renderProducts();
+      updateCheckoutBar();
+    }
+
+    // init() 必须在 STORAGE_KEY/DEFAULT_PRODUCTS 声明之后调用
+    // 移到脚本末尾执行 — 见最底部
+
+    console.log('%c 理工 · 文创小物商店 %c v3 ',
+      'font-family:serif;font-size:20px;color:#C49A76;',
+      'font-size:10px;color:#8C8278;');
+    console.log('🛒 购物车操作：点击 + 添加 | 点击 −/+ 增减 | 点击右上角购物车图标查看详情');
+    console.log('🎠 Banner：左右箭头 / 键盘方向键 / 点击圆点均可切换');
+    console.log('⚙ 点击右下角齿轮按钮进入管理面板，可编辑商品/分类，数据自动保存到浏览器');
+    console.log('📂 分类管理：管理面板中可添加/改名/删除分类');
+
+    /* ========================================
+       管理面板逻辑
+       ======================================== */
+    const STORAGE_KEY = 'zhijian_products';
+    const CAT_STORAGE_KEY    = 'zhijian_categories';
+    const BANNER_STORAGE_KEY = 'zhijian_banners';
+    const DEFAULT_PRODUCTS   = JSON.parse(JSON.stringify(products));
+    const DEFAULT_CATEGORIES = JSON.parse(JSON.stringify(categories));
+    const DEFAULT_BANNERS    = JSON.parse(JSON.stringify(banners));
+
+    // --- 从 localStorage 加载 ---
+    function loadProducts() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch (e) { /* ignore */ }
+      return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+    }
+
+    // --- 保存到 localStorage ---
+    function saveProducts() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+    }
+
+    // ===== Banner 管理 =====
+    function loadBanners() {
+      try {
+        const raw = localStorage.getItem(BANNER_STORAGE_KEY);
+        if (raw) { const p = JSON.parse(raw); if (Array.isArray(p) && p.length > 0) return p; }
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULT_BANNERS));
+    }
+    function saveBanners() { localStorage.setItem(BANNER_STORAGE_KEY, JSON.stringify(banners)); }
+    function initBanners() {
+      const saved = loadBanners();
+      banners.length = 0;
+      saved.forEach(b => banners.push(b));
+    }
+
+    // Banner 编辑弹窗
+    function openBannerEditModal(index) {
+      const $bm = document.getElementById('bannerEditModal');
+      const b = banners[index];
+      if (!$bm || !b) return;
+      document.getElementById('bannerEditIndex').value = index;
+      document.getElementById('bannerEditTag').value = b.tag;
+      document.getElementById('bannerEditTitle').value = b.title;
+      document.getElementById('bannerEditSub').value = b.sub;
+      document.getElementById('bannerEditBg').value = b.bg;
+      $bm.classList.add('open');
+    }
+    function closeBannerEditModal() {
+      document.getElementById('bannerEditModal').classList.remove('open');
+    }
+
+    // Banner 新增
+    function openBannerAddModal() {
+      const $bm = document.getElementById('bannerEditModal');
+      document.getElementById('bannerEditIndex').value = '-1';
+      document.getElementById('bannerEditTag').value = '';
+      document.getElementById('bannerEditTitle').value = '';
+      document.getElementById('bannerEditSub').value = '';
+      document.getElementById('bannerEditBg').value = 'banner-bg-1';
+      $bm.classList.add('open');
+    }
+
+    // ===== 分类管理 =====
+    function loadCategories() {
+      try {
+        const raw = localStorage.getItem(CAT_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) { /* ignore */ }
+      return JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+    }
+    function saveCategories() {
+      localStorage.setItem(CAT_STORAGE_KEY, JSON.stringify(categories));
+    }
+
+    // 渲染分类标签
+    // 渲染 Banner
+    function renderBanners() {
+      // 渲染卡片
+      $bannerScroll.innerHTML = banners.map(b => `
+        <div class="banner-card">
+          <div class="banner-bg ${b.bg}"></div>
+          <div class="banner-overlay"></div>
+          <div class="banner-text">
+            <div class="banner-tag">${b.tag}</div>
+            <div class="banner-title">${b.title}</div>
+            <div class="banner-sub">${b.sub}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // 渲染指示点
+      $bannerDotsContainer.innerHTML = banners.map((_, i) => `
+        <button class="banner-dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="第${i+1}张"></button>
+      `).join('');
+
+      // 更新 $bannerDots 引用（因为 DOM 已重建）
+      window._bannerDots = document.querySelectorAll('.banner-dot');
+    }
+
+    // 渲染管理面板的 Banner 列表
+    function renderAdminBannerList() {
+      const $adminBannerList = document.getElementById('adminBannerList');
+      if (!$adminBannerList) return;
+      $adminBannerList.innerHTML = banners.map((b, i) => `
+        <div class="admin-banner-item" data-index="${i}">
+          <div class="thumb ${b.bg}" style="width:60px;height:36px;border-radius:6px;flex-shrink:0;"></div>
+          <div class="meta" style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:0.85rem;">${b.title}</div>
+            <div style="font-size:0.65rem;color:var(--text-tertiary);">${b.tag} · ${b.sub}</div>
+          </div>
+          <button class="btn-sm" data-action="edit-banner" data-index="${i}" style="flex-shrink:0;">✎</button>
+          <button class="btn-del" data-action="del-banner" data-index="${i}" style="flex-shrink:0;" ${banners.length <= 1 ? 'disabled' : ''}>✕</button>
+        </div>
+      `).join('');
+
+      // 编辑
+      $adminBannerList.querySelectorAll('[data-action="edit-banner"]').forEach(btn => {
+        btn.addEventListener('click', () => openBannerEditModal(parseInt(btn.dataset.index)));
+      });
+      // 删除
+      $adminBannerList.querySelectorAll('[data-action="del-banner"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (banners.length <= 1) { showToast('至少保留一张 Banner'); return; }
+          const idx = parseInt(btn.dataset.index);
+          banners.splice(idx, 1);
+          saveBanners();
+          renderBanners();
+          renderAdminBannerList();
+          showToast('Banner 已删除');
+        });
+      });
+    }
+
+    function renderCategories() {
+      const currentActive = $categoryRow.querySelector('.category-chip.active');
+      const activeKey = currentActive ? currentActive.dataset.cat : 'all';
+
+      $categoryRow.innerHTML = `<div class="category-chip ${activeKey === 'all' ? 'active' : ''}" data-cat="all">全部</div>` +
+        categories.map(c => `
+          <div class="category-chip ${activeKey === c.key ? 'active' : ''}" data-cat="${c.key}">${c.label}</div>
+        `).join('');
+    }
+
+    // 渲染编辑弹窗里的分类下拉
+    function renderCategorySelect(selectedKey) {
+      const $editCategory = document.getElementById('editCategory');
+      if (!$editCategory) return;
+      $editCategory.innerHTML = categories.map(c =>
+        `<option value="${c.key}" ${c.key === selectedKey ? 'selected' : ''}>${c.label}</option>`
+      ).join('');
+    }
+
+    // 渲染管理面板的分类列表
+    function renderAdminCatList() {
+      const $adminCatList = document.getElementById('adminCatList');
+      if (!$adminCatList) return;
+      $adminCatList.innerHTML = categories.map(c => `
+        <div class="admin-cat-item">
+          <span class="cat-key" style="font-size:0.65rem;color:var(--text-tertiary);min-width:70px;">${c.key}</span>
+          <input type="text" class="cat-label-input" data-key="${c.key}" value="${c.label}"
+                 style="flex:1;padding:6px 10px;border:1px solid var(--warm-gray);border-radius:8px;font-size:0.85rem;font-family:var(--font-sans);">
+          <button class="btn-del cat-del-btn" data-key="${c.key}" title="删除">✕</button>
+        </div>
+      `).join('');
+
+      // 绑定改名事件
+      $adminCatList.querySelectorAll('.cat-label-input').forEach(input => {
+        input.addEventListener('change', () => {
+          const cat = categories.find(c => c.key === input.dataset.key);
+          if (cat) {
+            cat.label = input.value.trim() || cat.key;
+            saveCategories();
+            renderCategories();
+            renderProducts(activeCategory);
+            renderCategorySelect(document.getElementById('editCategory')?.value || '');
+          }
+        });
+      });
+
+      // 绑定删除事件
+      $adminCatList.querySelectorAll('.cat-del-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.key;
+          if (categories.length <= 1) { showToast('至少保留一个分类'); return; }
+          const cat = categories.find(c => c.key === key);
+          if (!confirm(`删除分类「${cat.label}」？该分类下的商品不会被删除，但需重新分配分类。`)) return;
+          const idx = categories.findIndex(c => c.key === key);
+          if (idx > -1) categories.splice(idx, 1);
+          // 将该分类下的商品移到第一个分类
+          const fallbackKey = categories[0].key;
+          products.forEach(p => { if (p.category === key) p.category = fallbackKey; });
+          saveCategories();
+          saveProducts();
+          renderCategories();
+          renderAdminCatList();
+          renderAdminList();
+          renderProducts(activeCategory);
+        });
+      });
+    }
+
+    // ===== 分类管理结束 =====
+
+    // --- 用 localStorage 数据覆盖内存 ---
+    function reloadFromStorage() {
+      const saved = loadProducts();
+      // 保持引用不变，清空再填充
+      products.length = 0;
+      saved.forEach(p => products.push(p));
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+    }
+
+    // --- 重置为默认 ---
+    function resetToDefault() {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(CAT_STORAGE_KEY);
+      localStorage.removeItem(BANNER_STORAGE_KEY);
+      products.length = 0;
+      DEFAULT_PRODUCTS.forEach(p => products.push(JSON.parse(JSON.stringify(p))));
+      categories.length = 0;
+      DEFAULT_CATEGORIES.forEach(c => categories.push(JSON.parse(JSON.stringify(c))));
+      banners.length = 0;
+      DEFAULT_BANNERS.forEach(b => banners.push(JSON.parse(JSON.stringify(b))));
+      cart = [];
+      renderBanners();
+      renderCategories();
+      renderAdminBannerList();
+      renderAdminCatList();
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+      closeCartDrawer();
+      renderCartDrawer();
+      showToast('已恢复默认商品和分类数据');
+    }
+
+    // --- DOM 引用 ---
+    const $adminToggle   = document.getElementById('adminToggle');
+    const $adminOverlay  = document.getElementById('adminOverlay');
+    const $adminPanel    = document.getElementById('adminPanel');
+    const $adminProdList = document.getElementById('adminProductList');
+    const $adminAddBtn   = document.getElementById('adminAddBtn');
+    const $adminResetBtn = document.getElementById('adminResetBtn');
+    const $adminCloseBtn = document.getElementById('adminCloseBtn');
+    const $adminExportBtn = document.getElementById('adminExportBtn');
+    const $adminImportBtn = document.getElementById('adminImportBtn');
+
+    const $editModalOverlay = document.getElementById('editModalOverlay');
+    const $editModalTitle   = document.getElementById('editModalTitle');
+    const $editForm         = document.getElementById('editForm');
+    const $editId           = document.getElementById('editId');
+    const $editName         = document.getElementById('editName');
+    const $editBrand        = document.getElementById('editBrand');
+    const $editNote         = document.getElementById('editNote');
+    const $editPrice        = document.getElementById('editPrice');
+    const $editCategory     = document.getElementById('editCategory');
+    const $editBadge        = document.getElementById('editBadge');
+    const $editGradient     = document.getElementById('editGradient');
+    const $editEmoji        = document.getElementById('editEmoji');
+    const $editImageFile    = document.getElementById('editImageFile');
+    const $editImageClear   = document.getElementById('editImageClearBtn');
+    const $editImgPreview   = document.getElementById('editImagePreviewImg');
+    const $editImgPreviewIcon = document.getElementById('editImagePreviewIcon');
+    const $editDeleteBtn    = document.getElementById('editDeleteBtn');
+    const $editCancelBtn    = document.getElementById('editCancelBtn');
+
+    let editingId = null;         // null = 新增模式, number = 编辑模式
+    let tempImageData = '';       // 编辑期间暂存的 base64 图片
+
+    // --- 面板开关 ---
+    function openAdminPanel() {
+      renderAdminBannerList();
+      renderAdminCatList();
+      renderAdminList();
+      $adminOverlay.classList.add('open');
+      $adminPanel.classList.add('open');
+      $adminToggle.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAdminPanel() {
+      $adminOverlay.classList.remove('open');
+      $adminPanel.classList.remove('open');
+      $adminToggle.classList.remove('active');
+      document.body.style.overflow = '';
+      closeEditModal();
+    }
+
+    $adminToggle.addEventListener('click', () => {
+      if ($adminPanel.classList.contains('open')) {
+        closeAdminPanel();
+      } else {
+        openAdminPanel();
+      }
+    });
+
+    $adminOverlay.addEventListener('click', closeAdminPanel);
+    $adminCloseBtn.addEventListener('click', closeAdminPanel);
+
+    // --- 渲染管理列表 ---
+    function renderAdminList() {
+      $adminProdList.innerHTML = products.map(p => {
+        const thumbContent = p.image
+          ? `<img src="${p.image}" alt="" style="width:100%;height:100%;object-fit:cover;">`
+          : p.emoji || '📦';
+        return `
+        <div class="admin-product-item" data-id="${p.id}">
+          <div class="thumb ${p.gradient}" style="overflow:hidden;">${thumbContent}</div>
+          <div class="meta">
+            <div class="pname">${p.name} ${p.badge ? '<span style="font-size:0.6rem;color:var(--rose-gold);">['+p.badge+']</span>' : ''}</div>
+            <div class="pcat">${p.brand} · ${p.note} · 分类: ${p.category}</div>
+          </div>
+          <span class="price-tag">¥${p.price}</span>
+          <button class="btn-del" data-id="${p.id}" aria-label="删除" title="删除">✕</button>
+        </div>`;
+      }).join('');
+
+      // 点击列表项 → 编辑
+      $adminProdList.querySelectorAll('.admin-product-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-del')) return;
+          const id = parseInt(item.dataset.id);
+          openEditModal(id);
+        });
+      });
+
+      // 删除按钮
+      $adminProdList.querySelectorAll('.btn-del').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.id);
+          deleteProduct(id);
+        });
+      });
+    }
+
+    function deleteProduct(id) {
+      const p = getProduct(id);
+      if (!p) return;
+      if (!confirm(`确定删除「${p.name}」吗？此操作不可恢复。`)) return;
+      const idx = products.findIndex(pr => pr.id === id);
+      if (idx > -1) products.splice(idx, 1);
+      // 清理购物车
+      cart = cart.filter(c => c.id !== id);
+      saveProducts();
+      renderAdminList();
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+      showToast(`已删除「${p.name}」`);
+    }
+
+    // --- 新增 ---
+    $adminAddBtn.addEventListener('click', () => openEditModal(null));
+
+    // --- 新增分类 ---
+    const $adminAddCatBtn  = document.getElementById('adminAddCatBtn');
+    const $newCatKey       = document.getElementById('newCatKey');
+    const $newCatLabel     = document.getElementById('newCatLabel');
+
+    $adminAddCatBtn.addEventListener('click', () => {
+      const key = $newCatKey.value.trim();
+      const label = $newCatLabel.value.trim();
+      if (!key) { showToast('请输入分类 key（英文标识）'); return; }
+      if (!label) { showToast('请输入分类名称'); return; }
+      if (categories.find(c => c.key === key)) { showToast('分类 key 已存在，请换一个'); return; }
+      categories.push({ key, label });
+      saveCategories();
+      $newCatKey.value = '';
+      $newCatLabel.value = '';
+      renderCategories();
+      renderAdminCatList();
+      renderProducts(activeCategory);
+      showToast(`已添加分类「${label}」`);
+    });
+
+    // --- Banner 编辑弹窗关闭 ---
+    document.getElementById('bannerEditModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('bannerEditModal')) closeBannerEditModal();
+    });
+
+    // --- Banner 保存 ---
+    document.getElementById('bannerEditForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const index = parseInt(document.getElementById('bannerEditIndex').value);
+      const data = {
+        tag:   document.getElementById('bannerEditTag').value.trim(),
+        title: document.getElementById('bannerEditTitle').value.trim(),
+        sub:   document.getElementById('bannerEditSub').value.trim(),
+        bg:    document.getElementById('bannerEditBg').value,
+      };
+      if (!data.title) { showToast('请填写 Banner 标题'); return; }
+
+      if (index >= 0) {
+        Object.assign(banners[index], data);
+      } else {
+        banners.push(data);
+      }
+      saveBanners();
+      closeBannerEditModal();
+      renderBanners();
+      renderAdminBannerList();
+      showToast(index >= 0 ? 'Banner 已更新' : 'Banner 已添加');
+    });
+
+    // --- 添加 Banner ---
+    document.getElementById('adminAddBannerBtn').addEventListener('click', openBannerAddModal);
+
+    // --- 图片预览 ---
+    function updateImagePreview(dataUrl) {
+      if (dataUrl) {
+        $editImgPreview.src = dataUrl;
+        $editImgPreview.style.display = '';
+        $editImgPreviewIcon.style.display = 'none';
+      } else {
+        $editImgPreview.src = '';
+        $editImgPreview.style.display = 'none';
+        $editImgPreviewIcon.style.display = '';
+      }
+    }
+
+    // 文件选择 → base64
+    $editImageFile.addEventListener('change', () => {
+      const file = $editImageFile.files[0];
+      if (!file) return;
+      // 检查大小（localStorage 限制约 5MB，base64 膨胀约 1.33x，限制文件 3MB）
+      if (file.size > 3 * 1024 * 1024) {
+        showToast('图片太大，请使用 3MB 以下的文件');
+        $editImageFile.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        tempImageData = reader.result;
+        updateImagePreview(tempImageData);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 清除图片
+    $editImageClear.addEventListener('click', () => {
+      tempImageData = '';
+      $editImageFile.value = '';
+      updateImagePreview('');
+    });
+
+    // --- 编辑弹窗 ---
+    function openEditModal(id) {
+      editingId = id;
+      tempImageData = '';
+      $editImageFile.value = '';
+      if (id !== null) {
+        const p = getProduct(id);
+        if (!p) return;
+        $editModalTitle.textContent = '编辑商品';
+        $editId.value = p.id;
+        $editName.value = p.name;
+        $editBrand.value = p.brand;
+        $editNote.value = p.note;
+        $editPrice.value = p.price;
+        renderCategorySelect(p.category);
+        $editBadge.value = p.badge || '';
+        $editGradient.value = p.gradient;
+        $editEmoji.value = p.emoji || '';
+        tempImageData = p.image || '';
+        updateImagePreview(tempImageData);
+        $editDeleteBtn.style.display = '';
+      } else {
+        $editModalTitle.textContent = '添加商品';
+        $editForm.reset();
+        renderCategorySelect(categories.length > 0 ? categories[0].key : '');
+        $editId.value = '';
+        $editBrand.value = 'ESSENCE';
+        $editCategory.value = 'floral';
+        $editGradient.value = 'card-img-1';
+        $editPrice.value = '';
+        $editDeleteBtn.style.display = 'none';
+      }
+      $editModalOverlay.classList.add('open');
+    }
+
+    function closeEditModal() {
+      $editModalOverlay.classList.remove('open');
+      editingId = null;
+    }
+
+    $editModalOverlay.addEventListener('click', (e) => {
+      if (e.target === $editModalOverlay) closeEditModal();
+    });
+    $editCancelBtn.addEventListener('click', closeEditModal);
+
+    // --- 保存商品 ---
+    $editForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = $editName.value.trim();
+      const price = parseInt($editPrice.value);
+      if (!name || isNaN(price) || price < 0) {
+        showToast('请填写商品名称和有效价格');
+        return;
+      }
+
+      const data = {
+        name,
+        brand: $editBrand.value.trim() || 'ESSENCE',
+        note: $editNote.value.trim(),
+        price,
+        category: $editCategory.value,
+        badge: $editBadge.value.trim(),
+        gradient: $editGradient.value,
+        emoji: $editEmoji.value.trim() || '📦',
+        image: tempImageData,  // base64 图片数据
+      };
+
+      if (editingId !== null) {
+        // 编辑模式
+        const p = getProduct(editingId);
+        if (p) Object.assign(p, data);
+      } else {
+        // 新增模式
+        const maxId = products.reduce((max, p) => Math.max(max, p.id), 0);
+        products.push({ id: maxId + 1, ...data });
+      }
+
+      saveProducts();
+      closeEditModal();
+      renderAdminList();
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+      showToast(editingId !== null ? `已更新「${name}」` : `已添加「${name}」`);
+    });
+
+    // --- 删除（弹窗内） ---
+    $editDeleteBtn.addEventListener('click', () => {
+      if (editingId === null) return;
+      const p = getProduct(editingId);
+      if (!p) return;
+      if (!confirm(`确定删除「${p.name}」吗？`)) return;
+      const idx = products.findIndex(pr => pr.id === editingId);
+      if (idx > -1) products.splice(idx, 1);
+      cart = cart.filter(c => c.id !== editingId);
+      saveProducts();
+      closeEditModal();
+      renderAdminList();
+      renderProducts(activeCategory);
+      updateCheckoutBar();
+      updateCartBadge();
+      showToast(`已删除「${p.name}」`);
+    });
+
+    // --- 重置 ---
+    $adminResetBtn.addEventListener('click', () => {
+      if (confirm('确定恢复为默认商品数据吗？当前修改将丢失，购物车也将清空。')) {
+        resetToDefault();
+        renderAdminList();
+      }
+    });
+
+    // --- 导出 JSON ---
+    $adminExportBtn.addEventListener('click', () => {
+      const data = { banners, categories, products };
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'zhijian_backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('已导出商品+分类数据 JSON');
+    });
+
+    // --- 导入 JSON ---
+    $adminImportBtn.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            // 兼容旧格式（纯数组）和新格式（{banners, categories, products}）
+            let prods, cats, bans;
+            if (Array.isArray(data)) {
+              prods = data; cats = null; bans = null;
+            } else if (data.products && Array.isArray(data.products)) {
+              prods = data.products; cats = data.categories || null; bans = data.banners || null;
+            } else {
+              throw new Error('数据格式错误：需要商品数组或 {banners, categories, products} 对象');
+            }
+            if (prods.length === 0) throw new Error('商品数据为空');
+            if (!prods[0].name || !prods[0].price) throw new Error('缺少必需字段 name/price');
+
+            const parts = [`${prods.length} 件商品`];
+            if (cats) parts.push(`${cats.length} 个分类`);
+            if (bans) parts.push(`${bans.length} 张 Banner`);
+            const msg = `即将导入 ${parts.join(' + ')}，会覆盖当前数据。确认？`;
+            if (!confirm(msg)) return;
+
+            products.length = 0;
+            prods.forEach(p => products.push(p));
+            if (cats) {
+              categories.length = 0;
+              cats.forEach(c => categories.push(c));
+              saveCategories();
+              renderCategories();
+              renderAdminCatList();
+            }
+            if (bans) {
+              banners.length = 0;
+              bans.forEach(b => banners.push(b));
+              saveBanners();
+              renderBanners();
+              renderAdminBannerList();
+            }
+            saveProducts();
+            renderAdminList();
+            renderProducts(activeCategory);
+            updateCheckoutBar();
+            updateCartBadge();
+            showToast(`成功导入 ${parts.join(' + ')}`);
+          } catch (err) {
+            showToast('导入失败：' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      });
+      input.click();
+    });
+
+    // --- 键盘快捷键：Ctrl+E 打开管理面板 ---
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'e') {
+        e.preventDefault();
+        if ($adminPanel.classList.contains('open')) {
+          closeAdminPanel();
+        } else {
+          openAdminPanel();
+        }
+      }
+    });
+
+    // --- 初始化：从 localStorage 加载 ---
+    function initProducts() {
+      const saved = loadProducts();
+      products.length = 0;
+      saved.forEach(p => products.push(p));
+    }
+    function initCategories() {
+      const saved = loadCategories();
+      categories.length = 0;
+      saved.forEach(c => categories.push(c));
+    }
+
+    // === 最终启动（所有声明完成后才执行） ===
+    init();
+  </script>
+
+</body>
+</html>
