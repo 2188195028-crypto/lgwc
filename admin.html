@@ -1,16 +1,16 @@
 <!--
-  ESSENCE · 纯白之息 — 极简香水品牌商品页
+  理工文创小物商店 · 管理后台
   设计主题：Apple 风 — 高级、克制、留白
   配色：米白 #FAF7F2 | 浅灰 #F0EDE8 | 玫瑰金 #C49A76
-  动效档位：L1 精致静态 + 滚动揭示 + 购物车缩放动画
-  作者：Claude | 日期：2026-05-31 | 迭代 v2
+  功能：商品管理 / 分类管理 / Banner管理 / 导入导出 / 密码保护
+  作者：Claude | 日期：2026-06-23 | 迭代 v3-admin
 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>理工 · 文创小物商店</title>
+  <title>理工文创 · 管理后台</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1307,9 +1307,134 @@
         min-height: 44px; min-width: 44px;
       }
     }
+
+    /* ========================================
+       十四、登录密码门控
+       ======================================== */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s var(--ease-out-expo), visibility 0.5s;
+    }
+    .login-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .login-card {
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
+    }
+    .login-card .login-icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+    }
+    .login-card h2 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+    .login-card .login-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-xl);
+    }
+    .login-card input {
+      width: 100%;
+      padding: 14px 20px;
+      border: 1px solid var(--warm-gray);
+      border-radius: 100px;
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      background: var(--white);
+      text-align: center;
+      letter-spacing: 0.15em;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      margin-bottom: var(--space-md);
+    }
+    .login-card input:focus {
+      outline: none;
+      border-color: var(--rose-gold);
+      box-shadow: 0 0 0 4px rgba(var(--rose-gold-rgb), 0.1);
+    }
+    .login-card .login-error {
+      font-size: 0.8rem;
+      color: #e74c3c;
+      min-height: 20px;
+      margin-bottom: var(--space-sm);
+      transition: all 0.2s;
+    }
+    .login-card .btn-login {
+      width: 100%;
+      padding: 14px;
+      border-radius: 100px;
+      border: none;
+      background: var(--rose-gold);
+      color: var(--white);
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: all var(--duration-base) var(--ease-out-expo);
+      box-shadow: 0 4px 16px rgba(var(--rose-gold-rgb), 0.3);
+    }
+    .login-card .btn-login:hover {
+      background: var(--rose-gold-deep);
+      transform: scale(1.03);
+    }
+    .login-card .btn-login:active {
+      transform: scale(0.95);
+    }
+    .login-card .btn-login:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-logout {
+      padding: 6px 16px;
+      border-radius: 100px;
+      border: 1px solid #e74c3c;
+      background: transparent;
+      color: #e74c3c;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out-expo);
+      font-family: var(--font-sans);
+    }
+    .btn-logout:hover {
+      background: #fde8e8;
+    }
+    @media (max-width: 640px) {
+      .login-card h2 { font-size: 1.25rem; }
+      .login-card input { padding: 12px 16px; font-size: 0.9rem; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- ========================================
+       登录密码门控（管理者版本）
+       ======================================== -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-icon">&#x1F512;</div>
+      <h2>管理后台</h2>
+      <p class="login-subtitle">理工文创小物商店 · 商品管理系统</p>
+      <input type="password" id="loginPassword" placeholder="请输入管理密码" autocomplete="off" aria-label="管理密码">
+      <div class="login-error" id="loginError"></div>
+      <button class="btn-login" id="btnLogin">验证进入</button>
+    </div>
+  </div>
 
   <!-- ======== 导航栏 ======== -->
   <nav class="nav-bar">
@@ -1402,6 +1527,7 @@
     <div class="admin-panel-header">
       <h3><span class="dot"></span> 商品管理</h3>
       <div class="admin-panel-actions">
+        <button class="btn-logout" id="adminLogoutBtn" title="退出登录">退出</button>
         <button class="btn-sm" id="adminImportBtn" title="从 JSON 导入">📥 导入</button>
         <button class="btn-sm" id="adminExportBtn" title="导出为 JSON">📤 导出</button>
       </div>
@@ -1562,6 +1688,83 @@
   </div>
 
   <script>
+    /* ========================================
+       密码门控 — 管理者登录验证
+       ======================================== */
+    (function() {
+      var CORRECT_PASSWORD = 'admin888';
+
+      var $loginOverlay = document.getElementById('loginOverlay');
+      var $loginPassword = document.getElementById('loginPassword');
+      var $loginError = document.getElementById('loginError');
+      var $btnLogin = document.getElementById('btnLogin');
+
+      if (sessionStorage.getItem('lgwc_admin_auth') === 'true') {
+        $loginOverlay.classList.add('hidden');
+      }
+
+      function doLogin() {
+        var pwd = $loginPassword.value.trim();
+        if (!pwd) {
+          $loginError.textContent = '请输入管理密码';
+          return;
+        }
+        if (pwd === CORRECT_PASSWORD) {
+          sessionStorage.setItem('lgwc_admin_auth', 'true');
+          $loginOverlay.classList.add('hidden');
+          $loginError.textContent = '';
+          showToast('欢迎进入管理后台');
+        } else {
+          $loginError.textContent = '密码错误，请重试';
+          $loginPassword.value = '';
+          $loginPassword.focus();
+          $loginOverlay.style.animation = 'none';
+          $loginOverlay.offsetHeight;
+          $loginOverlay.style.animation = 'loginShake 0.4s ease';
+        }
+      }
+
+      $btnLogin.addEventListener('click', doLogin);
+      $loginPassword.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doLogin();
+      });
+
+      window._adminLogout = function() {
+        if (confirm('确定退出管理后台吗？')) {
+          sessionStorage.removeItem('lgwc_admin_auth');
+          $loginOverlay.classList.remove('hidden');
+          $loginPassword.value = '';
+          $loginError.textContent = '';
+          closeAdminPanel();
+          showToast('已退出管理后台');
+        }
+      };
+
+      window.setAdminPassword = function(newPassword) {
+        if (!newPassword || newPassword.length < 6) {
+          console.error('密码至少 6 位');
+          return;
+        }
+        console.log('新密码（请更新 CORRECT_PASSWORD 变量）: ' + newPassword);
+        alert('请在代码中修改 CORRECT_PASSWORD 为: ' + newPassword);
+      };
+    })();
+
+    var loginShakeStyle = document.createElement('style');
+    loginShakeStyle.textContent = '@keyframes loginShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-6px)}}';
+    document.head.appendChild(loginShakeStyle);
+
+    /* ========================================
+       管理面板 — 数据持久化常量
+       ======================================== */
+    const STORAGE_KEY = 'zhijian_products';
+    const CAT_STORAGE_KEY    = 'zhijian_categories';
+    const BANNER_STORAGE_KEY = 'zhijian_banners';
+    const DEFAULT_PRODUCTS   = JSON.parse(JSON.stringify(products));
+    const DEFAULT_CATEGORIES = JSON.parse(JSON.stringify(categories));
+    const DEFAULT_BANNERS    = JSON.parse(JSON.stringify(banners));
+
+
     /* ========================================
        数据层 — 商品列表
        ======================================== */
@@ -2010,23 +2213,13 @@
     // init() 必须在 STORAGE_KEY/DEFAULT_PRODUCTS 声明之后调用
     // 移到脚本末尾执行 — 见最底部
 
-    console.log('%c 理工 · 文创小物商店 %c v3 ',
-      'font-family:serif;font-size:20px;color:#C49A76;',
-      'font-size:10px;color:#8C8278;');
-    console.log('🛒 购物车操作：点击 + 添加 | 点击 −/+ 增减 | 点击右上角购物车图标查看详情');
-    console.log('🎠 Banner：左右箭头 / 键盘方向键 / 点击圆点均可切换');
-    console.log('⚙ 点击右下角齿轮按钮进入管理面板，可编辑商品/分类，数据自动保存到浏览器');
-    console.log('📂 分类管理：管理面板中可添加/改名/删除分类');
-
-    /* ========================================
-       管理面板逻辑
-       ======================================== */
-    const STORAGE_KEY = 'zhijian_products';
-    const CAT_STORAGE_KEY    = 'zhijian_categories';
-    const BANNER_STORAGE_KEY = 'zhijian_banners';
-    const DEFAULT_PRODUCTS   = JSON.parse(JSON.stringify(products));
-    const DEFAULT_CATEGORIES = JSON.parse(JSON.stringify(categories));
-    const DEFAULT_BANNERS    = JSON.parse(JSON.stringify(banners));
+    	    console.log('%c 理工文创 · 管理后台 %c v3 ',
+		      'font-family:serif;font-size:20px;color:#C49A76;',
+		      'font-size:10px;color:#8C8278;');
+		    console.log('🔐 管理后台：商品/分类/Banner 增删改查 | 导入导出 JSON | Ctrl+E 切换面板');
+		    console.log('🛒 购物车操作：点击 + 添加 | 点击 −/+ 增减 | 点击右上角购物车图标查看详情');
+		    console.log('🎠 Banner：左右箭头 / 键盘方向键 / 点击圆点均可切换');
+		    console.log('💡 修改密码：在控制台输入 setAdminPassword("新密码") 查看新密码');
 
     // --- 从 localStorage 加载 ---
     function loadProducts() {
@@ -2330,6 +2523,14 @@
 
     $adminOverlay.addEventListener('click', closeAdminPanel);
     $adminCloseBtn.addEventListener('click', closeAdminPanel);
+
+	    // --- 退出登录 ---
+	    var $adminLogoutBtn = document.getElementById('adminLogoutBtn');
+	    if ($adminLogoutBtn) {
+	      $adminLogoutBtn.addEventListener('click', function() {
+	        window._adminLogout();
+	      });
+	    }
 
     // --- 渲染管理列表 ---
     function renderAdminList() {

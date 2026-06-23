@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>理工文创</title>
+<style>
+  body{margin:0;padding:20px;font-family:system-ui;background:#faf7f2;display:flex;align-items:center;justify-content:center;min-height:100vh}
+  .loader{text-align:center;color:#c49a76}
+  .loader p{font-size:14px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="loader">
+  <p>正在加载...</p>
+</div>
+<script>
+// Fetch full content from jsDelivr and render
+const CDN_URL = 'https://cdn.jsdelivr.net/gh/2188195028-crypto/lgwc@main/index.html';
+fetch(CDN_URL)
+  .then(r => r.text())
+  .then(html => {
+    document.open();
+    document.write(html);
+    document.close();
+  })
+  .catch(() => {
+    document.querySelector('.loader p').textContent = '加载失败，请尝试刷新页面';
+  });
+</script>
+</body>
+</html>
