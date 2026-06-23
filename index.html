@@ -1098,7 +1098,25 @@
   <!-- ======== Toast ======== -->
   <div class="toast" id="toast"></div>
 
-  <script>
+  
+  <!-- ======== 购物车抽屉 ======== -->
+  <div class="cart-drawer-overlay" id="cartOverlay"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h3>购物车</h3>
+      <button class="cart-drawer-close" id="cartDrawerClose" aria-label="关闭">✕</button>
+    </div>
+    <div class="cart-drawer-body" id="cartDrawerBody">
+      <div class="cart-empty">购物车是空的</div>
+    </div>
+    <div class="cart-drawer-footer">
+      <button class="btn-checkout" id="cartDrawerCheckout" style="width:100%;" disabled>去结算</button>
+    </div>
+  </div>
+
+  
+
+<script>
     /* ========================================
        数据层 — 商品列表
        ======================================== */

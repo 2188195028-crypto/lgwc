@@ -1754,16 +1754,6 @@
     loginShakeStyle.textContent = '@keyframes loginShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-6px)}}';
     document.head.appendChild(loginShakeStyle);
 
-    /* ========================================
-       管理面板 — 数据持久化常量
-       ======================================== */
-    const STORAGE_KEY = 'zhijian_products';
-    const CAT_STORAGE_KEY    = 'zhijian_categories';
-    const BANNER_STORAGE_KEY = 'zhijian_banners';
-    const DEFAULT_PRODUCTS   = JSON.parse(JSON.stringify(products));
-    const DEFAULT_CATEGORIES = JSON.parse(JSON.stringify(categories));
-    const DEFAULT_BANNERS    = JSON.parse(JSON.stringify(banners));
-
 
     /* ========================================
        数据层 — 商品列表
@@ -1791,7 +1781,18 @@
       { id: 6, brand: '理工', name: '马卡龙·薄荷绿', note: 'B6硬壳 · 100g象牙纸 · 256页',    price: 79,  category: 'notebook',  badge: '',         gradient: 'card-img-2', emoji: '📘', image: '' }
     ];
 
+    
     /* ========================================
+       管理面板 — 数据持久化常量
+       ======================================== */
+    const STORAGE_KEY = 'zhijian_products';
+    const CAT_STORAGE_KEY    = 'zhijian_categories';
+    const BANNER_STORAGE_KEY = 'zhijian_banners';
+    const DEFAULT_PRODUCTS   = JSON.parse(JSON.stringify(products));
+    const DEFAULT_CATEGORIES = JSON.parse(JSON.stringify(categories));
+    const DEFAULT_BANNERS    = JSON.parse(JSON.stringify(banners));
+
+/* ========================================
        状态层
        ======================================== */
     let cart = [];              // { id, qty }
